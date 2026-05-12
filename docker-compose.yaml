@@ -1,0 +1,23 @@
+services:
+  database:
+    image: postgres:13.4-alpine
+    environment:
+      - POSTGRES_USER=hedgedoc
+      - POSTGRES_PASSWORD=password123
+      - POSTGRES_DB=hedgedoc
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  hedgedoc:
+    image: quay.io/hedgedoc/hedgedoc:1.9.9
+    ports:
+      - "3000:3000"
+    environment:
+      - CMD_DB_URL=postgres://hedgedoc:password123@database:5432/hedgedoc
+      - CMD_DOMAIN=localhost
+      - CMD_URL_ADDPORT=true
+    depends_on:
+      - database
+
+volumes:
+  db_data:
